@@ -25,7 +25,7 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
       let gridster; // defined in init()
 
       // number of columns to render
-      const COLS = 12;
+      const COLS = 48;
       // number of pixed between each column/row
       const SPACER = 0;
       // pixels used by all of the spacers (gridster puts have a spacer on the ends)
@@ -203,7 +203,7 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
         const g = gridster;
 
         g.options.widget_margins = [SPACER / 2, SPACER / 2];
-        g.options.widget_base_dimensions = [($container.width() - spacerSize) / COLS, 100];
+        g.options.widget_base_dimensions = [($container.width() - spacerSize) / COLS, 20];
         g.min_widget_width  = (g.options.widget_margins[0] * 2) + g.options.widget_base_dimensions[0];
         g.min_widget_height = (g.options.widget_margins[1] * 2) + g.options.widget_base_dimensions[1];
 
