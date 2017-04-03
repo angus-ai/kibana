@@ -104,6 +104,16 @@ app.directive('dashboardApp', function (Notifier, courier, AppState, timefilter,
 
       $scope.$watch('state.options.darkTheme', setDarkTheme);
 
+      $scope.$watch('state.options.colNumber', function () {
+        $scope.$broadcast('redrawGrid');
+      });
+      $scope.$watch('state.options.rowHeight', function () {
+        $scope.$broadcast('redrawGrid');
+      });
+      $scope.$watch('state.options.spacer', function () {
+        $scope.$broadcast('redrawGrid');
+      });
+
       $scope.topNavMenu = [{
         key: 'new',
         description: 'New Dashboard',

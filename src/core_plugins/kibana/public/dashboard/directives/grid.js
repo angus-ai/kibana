@@ -22,14 +22,33 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
       // appState from controller
       const $state = $scope.state;
 
-      let gridster; // defined in init()
+      var gridster; // defined in init()
+      var ROWS_HEIGHT;
+      var COLS;
+      var SPACER;
+      var spacerSize;
+      // heigth of one row
+      if ($scope.opts.ui.rowHeight) {
+        ROWS_HEIGHT = $scope.opts.ui.rowHeight;
+      } else {
+        ROWS_HEIGHT = 100;
+      }
 
       // number of columns to render
-      const COLS = 48;
-      // number of pixed between each column/row
-      const SPACER = 0;
+      if ($scope.opts.ui.colNumber) {
+        COLS = $scope.opts.ui.colNumber;
+      } else{
+        COLS = 12;
+      }
+
+      // number of pixels between each column/row
+      if ($scope.opts.ui.spacer) {
+        SPACER = $scope.opts.ui.spacer;
+      } else {
+        SPACER = 0;
+      }
       // pixels used by all of the spacers (gridster puts have a spacer on the ends)
-      const spacerSize = SPACER * COLS;
+      spacerSize = SPACER * COLS;
 
       // debounced layout function is safe to call as much as possible
       const safeLayout = _.debounce(layout, 200);
@@ -58,6 +77,7 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
         gridster = $el.gridster({
           max_cols: COLS,
           min_cols: COLS,
+          widget_base_dimensions: [($container.width() - spacerSize) / COLS, ROWS_HEIGHT],
           autogenerate_stylesheet: false,
           resize: {
             enabled: true,
@@ -135,6 +155,31 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
         $window.on('resize', safeLayout);
         $scope.$on('ready:vis', safeLayout);
         $scope.$on('globalNav:update', safeLayout);
+        $scope.$on('redrawGrid', function () {
+          // height of one row
+          if ($scope.opts.ui.rowHeight) {
+            ROWS_HEIGHT = $scope.opts.ui.rowHeight;
+          } else {
+            ROWS_HEIGHT = 100;
+          }
+
+          // number of columns to render
+          if ($scope.opts.ui.colNumber) {
+            COLS = $scope.opts.ui.colNumber;
+          } else{
+            COLS = 12;
+          }
+
+          if ($scope.opts.ui.spacer) {
+            SPACER = $scope.opts.ui.spacer;
+          } else {
+            SPACER = 0;
+          }
+
+          spacerSize = SPACER * COLS;
+
+          safeLayout();
+        });
       }
 
       // return the panel object for an element.
@@ -200,10 +245,12 @@ app.directive('dashboardGrid', function ($compile, Notifier) {
       // we may need to consider using a different library
       function reflowGridster() {
         // https://github.com/gcphost/gridster-responsive/blob/97fe43d4b312b409696b1d702e1afb6fbd3bba71/jquery.gridster.js#L1208-L1235
-        const g = gridster;
 
+        const g = gridster;
         g.options.widget_margins = [SPACER / 2, SPACER / 2];
-        g.options.widget_base_dimensions = [($container.width() - spacerSize) / COLS, 20];
+        g.options.widget_base_dimensions = [($container.width() - spacerSize) / COLS, ROWS_HEIGHT];
+        g.max_cols = COLS;
+        g.min_cols = COLS;
         g.min_widget_width  = (g.options.widget_margins[0] * 2) + g.options.widget_base_dimensions[0];
         g.min_widget_height = (g.options.widget_margins[1] * 2) + g.options.widget_base_dimensions[1];
 
