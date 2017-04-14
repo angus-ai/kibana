@@ -97,3 +97,10 @@
 # Set the interval in milliseconds to sample system and process performance
 # metrics. Minimum is 100ms. Defaults to 5000.
 #ops.interval: 5000
+elasticsearch.url: http://localhost:19200
+elasticsearch.requestHeadersWhitelist: [ x-proxy-user, cookie ]
+own_home.session.secretkey: the-password-must-be-at-least-32-characters-long
+own_home.session.isSecure: false
+own_home.local.groups: []
+own_home.explicit_kibana_index_url.enabled: true
+own_home.explicit_kibana_index_url.proxy.url: "http://0.0.0.0:15601"
